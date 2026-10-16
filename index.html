@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reino del Padre • Workspace Templarios Menores (2027)</title>
+    <title>Reino del Padre • Organización del campamento 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -66,16 +66,16 @@
                         <h2 class="text-xl font-extrabold tracking-tight font-brand">REINO DEL PADRE</h2>
                     </div>
                 </div>
-                <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-3 py-1 rounded-full border border-brand-cyan/30">Acceso por Rol</span>
+                <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-3 py-1 rounded-full border border-brand-cyan/30">Equipo organizador</span>
             </div>
 
             <div class="p-6 space-y-5">
                 <div class="bg-brand-light border border-brand-cyan/30 rounded-xl p-3.5 text-xs text-brand-dark flex items-start space-x-2.5">
                     <i class="ph-fill ph-info text-lg text-brand-cyan shrink-0 mt-0.5"></i>
                     <div>
-                        <span class="font-bold block text-brand-dark">Control de Permisos por Rol (Mapeo por Chat):</span>
+                        <span class="font-bold block text-brand-dark">Un espacio para organizar el campamento</span>
                         • <strong>Jefe de Sección (Piedra) y Secretario (Jr):</strong> Acceso total de Comando a todas las áreas.<br>
-                        • <strong>Jefes y Subjefes:</strong> Al entrar con su Gmail registrado en el grupo de WhatsApp visualizan únicamente su Subsección o Departamento y los hitos generales.
+                        • <strong>Jefes y Subjefes:</strong> Acceden a las tareas de su área y a los hitos generales.
                     </div>
                 </div>
 
@@ -88,10 +88,10 @@
                             <path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/>
                             <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 20.9 7.4 24 12 24z"/>
                         </svg>
-                        <span>Iniciar sesión con Google (reino-del-padre)</span>
+                        <span>Continuar con Google</span>
                     </button>
                     <p class="text-[11px] text-brand-green font-semibold text-center mt-1.5">
-                        Proyecto: <strong>reino-del-padre</strong>
+                        Acceso exclusivo para el equipo organizador
                     </p>
                 </div>
 
@@ -121,13 +121,13 @@
             <div class="flex items-center space-x-2.5 min-w-0">
                 <div id="userAvatarSidebar" class="w-8 h-8 rounded-full bg-brand-cyan text-white font-bold text-xs flex items-center justify-center shrink-0">AP</div>
                 <div class="truncate">
-                    <div id="userNameSidebar" class="text-xs font-bold text-white truncate">Mil. Agustín Piedrabuena</div>
-                    <div id="userRoleSidebar" class="text-[10px] text-brand-green font-medium truncate">Acceso Total (Comando)</div>
+                    <div id="userNameSidebar" class="text-xs font-bold text-white truncate">Sin sesión</div>
+                    <div id="userRoleSidebar" class="text-[10px] text-brand-green font-medium truncate">Equipo organizador</div>
                 </div>
             </div>
-            <button onclick="openLoginModal()" title="Cambiar de cuenta" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-semibold transition shrink-0 flex items-center space-x-1">
+            <button onclick="openLoginModal()" title="Cerrar sesión" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-semibold transition shrink-0 flex items-center space-x-1">
                 <i class="ph ph-arrows-left-right"></i>
-                <span>Cambiar</span>
+                <span>Salir</span>
             </button>
         </div>
 
@@ -135,19 +135,15 @@
             <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Vistas Principales</div>
             <button onclick="switchMainView('kanban')" id="nav-view-kanban" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium bg-brand-red text-white shadow-sm transition">
                 <i class="ph ph-kanban text-lg"></i>
-                <span>Tablero Jira (Kanban)</span>
+                <span>Tablero de tareas</span>
             </button>
             <button onclick="switchMainView('directory')" id="nav-view-directory" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
                 <i class="ph ph-users-three text-lg"></i>
-                <span>Estructura y Mails (Chat)</span>
+                <span>Equipo</span>
             </button>
             <button onclick="switchMainView('timeline')" id="nav-view-timeline" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
                 <i class="ph ph-calendar-check text-lg"></i>
-                <span>Hitos y Fechas Clave</span>
-            </button>
-            <button onclick="switchMainView('hosting')" id="nav-view-hosting" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-brand-gold hover:bg-slate-800 hover:text-amber-200 transition">
-                <i class="ph-fill ph-cloud-arrow-up text-lg"></i>
-                <span>Hosting Gratis & Google Auth</span>
+                <span>Cronograma</span>
             </button>
         </div>
 
@@ -297,12 +293,9 @@
                 <span class="block text-white font-bold">Campamento "Reino del Padre"</span>
                 <span id="cloudSyncStatus" class="text-[11px] text-brand-green flex items-center space-x-1">
                     <span class="w-1.5 h-1.5 rounded-full bg-brand-green inline-block"></span>
-                    <span>Sincronizado en tiempo real</span>
+                    <span>Iniciá sesión para continuar</span>
                 </span>
             </div>
-            <button onclick="resetDefaultData()" title="Restaurar tareas originales" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition">
-                <i class="ph ph-arrows-counter-clockwise text-base"></i>
-            </button>
         </div>
     </aside>
 
@@ -326,20 +319,11 @@
 
             <!-- Controles Superiores -->
             <div class="flex items-center space-x-3">
-                <button onclick="seedAllDataToFirestore(true)" id="btnSyncDbTop" title="Subir todas las tareas e integrantes a tu Firestore" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-gold/10 hover:bg-brand-gold/20 text-amber-900 border border-brand-gold/30 rounded-lg text-xs font-bold transition shrink-0">
-                    <i class="ph-bold ph-database text-sm text-brand-orange"></i>
-                    <span id="btnSyncDbText">Subir Todo a DB</span>
-                </button>
-
-                <button onclick="downloadReadyHtmlWithConfig()" title="Descargar index.html para subir a Netlify" class="hidden xl:flex items-center space-x-1.5 px-3 py-1.5 bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/30 rounded-lg text-xs font-bold transition">
-                    <i class="ph-bold ph-download-simple text-sm"></i>
-                    <span>Descargar index.html</span>
-                </button>
 
                 <button onclick="openLoginModal()" class="hidden lg:flex items-center space-x-2 px-3 py-1.5 bg-brand-light hover:bg-slate-200 border border-brand-cyan/20 rounded-lg text-xs transition">
                     <i class="ph-fill ph-user-circle text-base text-brand-red"></i>
-                    <span id="topBarUserEmail" class="font-semibold text-brand-dark">Modo Comando (Piedra / Jr)</span>
-                    <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600">Cambiar</span>
+                    <span id="topBarUserEmail" class="font-semibold text-brand-dark">Mi cuenta</span>
+                    <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600">Salir</span>
                 </button>
 
                 <div class="relative flex-1 sm:w-56">
@@ -438,13 +422,13 @@
         <main id="view-directory" class="hidden flex-1 overflow-y-auto p-6 space-y-8">
             <div class="bg-brand-dark text-white p-5 rounded-2xl border border-brand-cyan/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Nómina Oficial Sincronizada con el Chat de WhatsApp</span>
-                    <h3 class="text-lg font-bold mt-0.5 font-brand">Campamento "Reino del Padre" • 29 Integrantes (24 Mails cargados)</h3>
-                    <p class="text-xs text-slate-300 mt-1">Haz clic en <strong>"Simular vista"</strong> en cualquier tarjeta para comprobar cómo filtra la app al entrar con ese correo.</p>
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Equipo organizador</span>
+                    <h3 class="text-lg font-bold mt-0.5 font-brand">Las personas detrás del campamento</h3>
+                    <p class="text-xs text-slate-300 mt-1">Responsables de jefatura, subsecciones y departamentos.</p>
                 </div>
                 <button onclick="copyAllEmails()" class="px-4 py-2.5 bg-brand-red hover:bg-brand-red/90 text-white rounded-xl text-xs font-bold transition flex items-center space-x-2 shrink-0 self-start md:self-auto">
                     <i class="ph-bold ph-copy text-base"></i>
-                    <span id="copyEmailsBtnText">Copiar los 24 Mails para Drive</span>
+                    <span id="copyEmailsBtnText">Copiar correos</span>
                 </button>
             </div>
 
@@ -461,7 +445,7 @@
             <section>
                 <div class="flex items-center space-x-2 mb-4">
                     <i class="ph-fill ph-flag-pennant text-xl text-brand-cyan"></i>
-                    <h3 class="text-lg font-bold text-brand-dark font-brand">Subsecciones (Acceso filtrado por rol)</h3>
+                    <h3 class="text-lg font-bold text-brand-dark font-brand">Subsecciones</h3>
                 </div>
                 <div id="directorySubsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"></div>
             </section>
@@ -558,75 +542,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <main id="view-hosting" class="hidden flex-1 overflow-y-auto p-6">
-            <div class="max-w-4xl mx-auto space-y-6">
-                <div class="bg-brand-dark text-white p-6 rounded-2xl border border-brand-cyan/20 shadow-lg">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-xl bg-brand-cyan/20 border border-brand-cyan/30 text-brand-cyan flex items-center justify-center text-2xl">
-                            <i class="ph-fill ph-cloud-check"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Arquitectura Serverless 100% Gratuita</span>
-                            <h3 class="text-xl font-bold font-brand">¿Dónde hostear el Backend gratis y cómo activar Google Login?</h3>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-                        Este archivo ya está conectado a tu proyecto de Firebase <strong>reino-del-padre</strong> y filtra automáticamente los 24 correos del grupo de WhatsApp.
-                    </p>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border-2 border-brand-green shadow-md space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded bg-brand-green/20 text-brand-green">Proyecto Conectado</span>
-                            <h4 class="text-lg font-extrabold text-brand-dark mt-1 font-brand">Firebase "reino-del-padre" vinculado</h4>
-                        </div>
-                        <span class="text-xs font-bold px-3 py-1.5 rounded-xl bg-brand-green/20 text-brand-green shrink-0">
-                            ✓ Conectado: reino-del-padre
-                        </span>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="space-y-2.5 text-xs text-slate-700 bg-brand-light p-4 rounded-xl border border-brand-cyan/20">
-                            <div class="font-bold text-brand-dark uppercase tracking-wider text-[11px] mb-2">Verifica estos pasos en tu consola de Firebase:</div>
-                            <div class="flex items-start space-x-2">
-                                <span class="w-5 h-5 rounded-full bg-brand-green text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">✓</span>
-                                <span>Proyecto <strong>reino-del-padre</strong> configurado.</span>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="w-5 h-5 rounded-full bg-brand-red text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
-                                <span>En Firebase ve a <strong>Authentication → Proveedor Google → Habilitar</strong>.</span>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="w-5 h-5 rounded-full bg-brand-red text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
-                                <span>En <strong>Firestore Database</strong> asegúrate de tener creada la base de datos.</span>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col justify-between space-y-3">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Configuración Activa:</label>
-                                <textarea id="firebaseConfigInput" rows="5" class="w-full p-3 font-mono text-xs bg-brand-dark text-brand-cyan rounded-xl border border-slate-700 focus:outline-none">{
-  "apiKey": "AIzaSyDBE0C1QrY3lRvsgf_W5GYw-JvV-jUcWVQ",
-  "authDomain": "reino-del-padre.firebaseapp.com",
-  "projectId": "reino-del-padre",
-  "storageBucket": "reino-del-padre.firebasestorage.app",
-  "messagingSenderId": "937851660879",
-  "appId": "1:937851660879:web:9df9879f1900b6aba2d83a",
-  "measurementId": "G-BPNJ3ZVZMQ"
-}</textarea>
-                                <p class="text-xs font-bold mt-1 text-brand-green block">✓ Credenciales oficiales cargadas.</p>
-                            </div>
-                            <button onclick="downloadReadyHtmlWithConfig()" class="w-full bg-brand-green hover:bg-brand-green/90 text-white py-2.5 px-4 rounded-xl text-xs font-bold shadow-sm transition flex items-center justify-center space-x-2">
-                                <i class="ph-bold ph-download-simple text-base"></i>
-                                <span>Descargar index.html para Netlify / Vercel</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -756,12 +671,11 @@
           const provider = new GoogleAuthProvider(); provider.setCustomParameters({prompt:'select_account'});
           await signInWithPopup(auth, provider);
         } catch (e) {
-          const errors = {'auth/unauthorized-domain':'Este dominio aún no está autorizado en Firebase.', 'auth/popup-blocked':'Permití las ventanas emergentes para iniciar sesión.', 'auth/popup-closed-by-user':'Se cerró la ventana. Volvé a intentar.', 'auth/network-request-failed':'No se pudo conectar. Revisá tu conexión.'};
+          const errors = {'auth/unauthorized-domain':'El acceso desde este sitio todavía no está habilitado. Contactá a Jefatura.', 'auth/popup-blocked':'Permití las ventanas emergentes para iniciar sesión.', 'auth/popup-closed-by-user':'Se cerró la ventana. Volvé a intentar.', 'auth/network-request-failed':'No se pudo conectar. Revisá tu conexión.'};
           report(errors[e.code] || `No se pudo iniciar sesión (${e.code || 'error'}).`);
         }
       };
       window.logoutWorkspace = async () => { await signOut(auth); };
-      window.downloadReadyHtmlWithConfig = async () => { const response = await fetch('./index.html'); const url = URL.createObjectURL(await response.blob()); const link = document.createElement('a'); link.href = url; link.download = 'index.html'; link.click(); URL.revokeObjectURL(url); };
       onAuthStateChanged(auth, async user => {
         const token = ++generation; resetSession();
         if (!user || !user.emailVerified) return;
@@ -775,8 +689,8 @@
           serverTasks = snap.docs.map(d => d.data()).sort((a,b) => a.id.localeCompare(b.id));
           window.tasks = structuredClone(serverTasks); window.renderKanban();
           document.getElementById('cloudSyncStatus').textContent = `Sincronizado: ${serverTasks.length} tareas`;
-          document.getElementById('btnSyncDbText').textContent = 'Sincronizado';
-        }, e => report(`No se pudo leer la base (${e.code}). Revisá los permisos.`));
+
+        }, e => report(`No se pudo leer la base (${e.code}). Contactá a Jefatura.`));
       });
       function canWrite(task) {
         const m = window.authenticatedMember;
@@ -811,7 +725,7 @@
           refs.forEach((ref,i) => { if (!existing[i].exists()) tx.set(ref, window.INITIAL_TASKS[i]); });
           tx.set(metaRef,{initialized:true});
         });
-        document.getElementById('btnSyncDbText').textContent = 'Carga inicial completada';
+
       });
     </script>
 
@@ -921,7 +835,7 @@
             const allAreaBtns = document.querySelectorAll('.area-btn');
 
             if (user.canSeeAll) {
-                document.getElementById('userRoleSidebar').textContent = 'Acceso Total (Jefe / Secretario)';
+                document.getElementById('userRoleSidebar').textContent = 'Jefatura · Acceso total';
                 document.getElementById('userRoleSidebar').className = 'text-[10px] text-brand-green font-medium truncate';
                 restrictedBanner.classList.add('hidden');
                 allAreaBtns.forEach(btn => btn.classList.remove('hidden'));
@@ -1057,16 +971,7 @@
         }
 
         function copyAllEmails() {
-            const realEmails = [
-                'dardomaldonado7@gmail.com', 'jcfernandez2611@gmail.com', 'zayunbautista@gmail.com',
-                'Ceballoslauty2@gmail.com', 'Almadaaugusto39@gmail.com', 'bluccalemos@gmail.com',
-                'joseignaciohaller@gmail.com', 'Javi.mignone5@gmail.com', 'joaquinmeyercba@gmail.com',
-                'matiasezequielopez@gmail.com', 'tobiasarroyo90@gmail.com', 'nahundelacuesta@gmail.com',
-                'herediarobertonicolas@gmail.com', 'santiandrada01@gmail.com', 'santinopaga07@gmail.com',
-                'samusariago@gmail.com', 'andres678922@gmail.com', 'facundofinetti@gmail.com',
-                'salinaseduardo.mkt@gmail.com', 'ngkuck@gmail.com', 'Lucasarias458@gmail.com',
-                'Julianahumada86@gmail.com', 'Mateeeandres@gmail.com', 'santiagoviejobueno6@gmail.com'
-            ].join(', ');
+            const realEmails = USER_DIRECTORY.filter(u => u.email.endsWith('@gmail.com')).map(u => u.email).join(', ');
 
             const tempInput = document.createElement('textarea');
             tempInput.value = realEmails;
@@ -1076,8 +981,8 @@
             document.body.removeChild(tempInput);
 
             const btnText = document.getElementById('copyEmailsBtnText');
-            btnText.textContent = '¡24 Mails Copiados!';
-            setTimeout(() => { btnText.textContent = 'Copiar los 24 Mails para Drive'; }, 2500);
+            btnText.textContent = 'Correos copiados';
+            setTimeout(() => { btnText.textContent = 'Copiar correos'; }, 2500);
         }
 
         function renderKanban() {
@@ -1276,7 +1181,7 @@
 
         function switchMainView(viewName) {
             currentMainView = viewName;
-            const views = ['kanban', 'directory', 'timeline', 'hosting'];
+            const views = ['kanban', 'directory', 'timeline'];
             
             views.forEach(v => {
                 const viewEl = document.getElementById(`view-${v}`);
@@ -1296,13 +1201,10 @@
                 document.getElementById('mainHeaderTitle').textContent = AREAS_CONFIG[currentAreaFilter].title;
             } else if (viewName === 'directory') {
                 quickBar.classList.add('hidden');
-                document.getElementById('mainHeaderTitle').textContent = 'Estructura de Mando y Mails del Chat';
+                document.getElementById('mainHeaderTitle').textContent = 'Equipo organizador';
             } else if (viewName === 'timeline') {
                 quickBar.classList.add('hidden');
                 document.getElementById('mainHeaderTitle').textContent = 'Cronograma e Hitos del Campamento';
-            } else if (viewName === 'hosting') {
-                quickBar.classList.add('hidden');
-                document.getElementById('mainHeaderTitle').textContent = 'Hosting Gratuito & Google Auth';
             }
             document.getElementById('sidebar').classList.add('-translate-x-full');
         }
