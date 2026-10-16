@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reino del Padre • Workspace Templarios Menores (2027)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Raleway', 'sans-serif'],
+                        brand: ['Raleway', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#162937',     /* Tono frío primario */
+                            cyan: '#009bb3',     /* Tono frío acento secundario */
+                            green: '#639e8d',    /* Tono frío verde institucional */
+                            light: '#e1eef2',    /* Fondo claro oficial */
+                            red: '#d93a5d',      /* Tono cálido rojo primario */
+                            orange: '#db6829',   /* Tono cálido naranja */
+                            gold: '#ffa41d'      /* Tono cálido amarillo oro */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .kanban-col::-webkit-scrollbar {
+            width: 6px;
+        }
+        .kanban-col::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .kanban-col::-webkit-scrollbar-thumb {
+            background-color: #009bb3;
+            border-radius: 20px;
+        }
+        .dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+            border: 2px dashed #d93a5d !important;
+        }
+        .drag-over {
+            background-color: #e1eef2 !important;
+            border-color: #009bb3 !important;
+        }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden text-brand-dark antialiased select-none bg-brand-light">
+
+    <div id="loginOverlay" class="fixed inset-0 bg-[#162937]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-brand-cyan/20 overflow-hidden my-8">
+            <div class="bg-brand-dark p-6 text-white flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-xl bg-brand-red flex items-center justify-center text-white font-bold shadow-lg shadow-brand-red/40 border border-brand-orange">
+                        <i class="ph-fill ph-shield-cross text-3xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold block">Campamento Nacional 2027 • MDZ</span>
+                        <h2 class="text-xl font-extrabold tracking-tight font-brand">REINO DEL PADRE</h2>
+                    </div>
+                </div>
+                <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-3 py-1 rounded-full border border-brand-cyan/30">Acceso por Rol</span>
+            </div>
+
+            <div class="p-6 space-y-5">
+                <div class="bg-brand-light border border-brand-cyan/30 rounded-xl p-3.5 text-xs text-brand-dark flex items-start space-x-2.5">
+                    <i class="ph-fill ph-info text-lg text-brand-cyan shrink-0 mt-0.5"></i>
+                    <div>
+                        <span class="font-bold block text-brand-dark">Control de Permisos por Rol (Mapeo por Chat):</span>
+                        • <strong>Jefe de Sección (Piedra) y Secretario (Jr):</strong> Acceso total de Comando a todas las áreas.<br>
+                        • <strong>Jefes y Subjefes:</strong> Al entrar con su Gmail registrado en el grupo de WhatsApp visualizan únicamente su Subsección o Departamento y los hitos generales.
+                    </div>
+                </div>
+
+                <p id="loginErrorMsg" role="alert" class="text-sm text-red-700 hidden"></p>
+                <div class="pt-1">
+                    <button onclick="signInWithGoogleReal()" class="w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-brand-dark border border-slate-300 rounded-xl text-sm font-bold shadow-xs transition flex items-center justify-center space-x-2.5">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/>
+                            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/>
+                            <path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/>
+                            <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 20.9 7.4 24 12 24z"/>
+                        </svg>
+                        <span>Iniciar sesión con Google (reino-del-padre)</span>
+                    </button>
+                    <p class="text-[11px] text-brand-green font-semibold text-center mt-1.5">
+                        Proyecto: <strong>reino-del-padre</strong>
+                    </p>
+                </div>
+
+                <div id="quickLoginList" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="w-72 bg-brand-dark text-slate-200 flex flex-col h-full shrink-0 transition-all duration-300 z-30 fixed md:static -translate-x-full md:translate-x-0 border-r border-brand-cyan/20">
+        <!-- Logo & Header -->
+        <div class="p-5 flex items-center justify-between border-b border-slate-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-brand-red flex items-center justify-center text-white font-bold shadow-lg shadow-brand-red/40 border border-brand-orange">
+                    <i class="ph-fill ph-shield-cross text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-white text-base leading-tight tracking-wide font-brand">REINO DEL PADRE</h1>
+                    <span class="text-xs text-brand-cyan font-semibold tracking-wider uppercase block">MDZ 2027</span>
+                </div>
+            </div>
+            <button id="closeSidebarBtn" class="md:hidden text-slate-400 hover:text-white">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-3.5 bg-slate-950/60 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5 min-w-0">
+                <div id="userAvatarSidebar" class="w-8 h-8 rounded-full bg-brand-cyan text-white font-bold text-xs flex items-center justify-center shrink-0">AP</div>
+                <div class="truncate">
+                    <div id="userNameSidebar" class="text-xs font-bold text-white truncate">Mil. Agustín Piedrabuena</div>
+                    <div id="userRoleSidebar" class="text-[10px] text-brand-green font-medium truncate">Acceso Total (Comando)</div>
+                </div>
+            </div>
+            <button onclick="openLoginModal()" title="Cambiar de cuenta" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-semibold transition shrink-0 flex items-center space-x-1">
+                <i class="ph ph-arrows-left-right"></i>
+                <span>Cambiar</span>
+            </button>
+        </div>
+
+        <div class="p-3 space-y-1 border-b border-slate-800">
+            <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Vistas Principales</div>
+            <button onclick="switchMainView('kanban')" id="nav-view-kanban" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium bg-brand-red text-white shadow-sm transition">
+                <i class="ph ph-kanban text-lg"></i>
+                <span>Tablero Jira (Kanban)</span>
+            </button>
+            <button onclick="switchMainView('directory')" id="nav-view-directory" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                <i class="ph ph-users-three text-lg"></i>
+                <span>Estructura y Mails (Chat)</span>
+            </button>
+            <button onclick="switchMainView('timeline')" id="nav-view-timeline" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+                <i class="ph ph-calendar-check text-lg"></i>
+                <span>Hitos y Fechas Clave</span>
+            </button>
+            <button onclick="switchMainView('hosting')" id="nav-view-hosting" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-brand-gold hover:bg-slate-800 hover:text-amber-200 transition">
+                <i class="ph-fill ph-cloud-arrow-up text-lg"></i>
+                <span>Hosting Gratis & Google Auth</span>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-3 space-y-4 kanban-col">
+            <div id="restrictedNoticeSidebar" class="hidden px-3 py-2 bg-slate-800/90 border border-slate-700 rounded-lg text-[11px] text-slate-300">
+                <span class="font-bold text-brand-gold block mb-0.5"><i class="ph-fill ph-lock-key"></i> Vista Filtrada por Rol</span>
+                Solo visualizas tu área asignada y las tareas transversales del Comando.
+            </div>
+
+            <!-- General -->
+            <div id="sidebarGroupGeneral">
+                <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Filtro de Tablero</div>
+                <button onclick="filterByArea('ALL')" id="btn-area-ALL" data-area="ALL" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 text-white transition mt-1">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="ph ph-globe text-lg text-brand-cyan"></i>
+                        <span>Visión General (Todo)</span>
+                    </div>
+                    <span id="badge-ALL" class="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded-full">0</span>
+                </button>
+                <button onclick="filterByArea('JEFATURA')" id="btn-area-JEFATURA" data-area="JEFATURA" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition mt-1">
+                    <div class="flex items-center space-x-2.5">
+                        <i class="ph ph-crown text-lg text-brand-gold"></i>
+                        <div class="text-left">
+                            <div class="leading-none">Jefatura y Comando</div>
+                            <span class="text-[10px] text-slate-400">Piedra & Jr Jaramillo</span>
+                        </div>
+                    </div>
+                    <span id="badge-JEFATURA" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+
+            <!-- Subsecciones -->
+            <div id="sidebarGroupSubs">
+                <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Subsecciones</div>
+                <div class="space-y-1 mt-1">
+                    <button onclick="filterByArea('SUB1')" id="btn-area-SUB1" data-area="SUB1" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-brand-cyan"></span>
+                            <div class="text-left">
+                                <div class="leading-none">Subsección 1</div>
+                                <span class="text-[10px] text-slate-400">Jefe: B. Araoz (Boisdron)</span>
+                            </div>
+                        </div>
+                        <span id="badge-SUB1" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('SUB2')" id="btn-area-SUB2" data-area="SUB2" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
+                            <div class="text-left">
+                                <div class="leading-none">Subsección 2</div>
+                                <span class="text-[10px] text-slate-400">Jefe: M. Andres (Tucún)</span>
+                            </div>
+                        </div>
+                        <span id="badge-SUB2" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('SUB3')" id="btn-area-SUB3" data-area="SUB3" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-brand-orange"></span>
+                            <div class="text-left">
+                                <div class="leading-none">Subsección 3</div>
+                                <span class="text-[10px] text-slate-400">Jefe: S. Sariago (Laetare)</span>
+                            </div>
+                        </div>
+                        <span id="badge-SUB3" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('SUB4')" id="btn-area-SUB4" data-area="SUB4" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span>
+                            <div class="text-left">
+                                <div class="leading-none">Subsección 4</div>
+                                <span class="text-[10px] text-slate-400">Jefe: D. Maldonado (Mavúl)</span>
+                            </div>
+                        </div>
+                        <span id="badge-SUB4" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Departamentos -->
+            <div id="sidebarGroupDeptos">
+                <div class="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Departamentos</div>
+                <div class="space-y-1 mt-1">
+                    <button onclick="filterByArea('FORDOC')" id="btn-area-FORDOC" data-area="FORDOC" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="ph ph-book-open-text text-lg text-brand-cyan"></i>
+                            <div class="text-left">
+                                <div class="leading-none">For Doc</div>
+                                <span class="text-[10px] text-slate-400">Jefe: S. Andrada</span>
+                            </div>
+                        </div>
+                        <span id="badge-FORDOC" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('ACTIVIDADES')" id="btn-area-ACTIVIDADES" data-area="ACTIVIDADES" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="ph ph-compass text-lg text-brand-orange"></i>
+                            <div class="text-left">
+                                <div class="leading-none">Actividades</div>
+                                <span class="text-[10px] text-slate-400">Jefe: A. Almada</span>
+                            </div>
+                        </div>
+                        <span id="badge-ACTIVIDADES" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('ADMIN')" id="btn-area-ADMIN" data-area="ADMIN" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="ph ph-coins text-lg text-brand-green"></i>
+                            <div class="text-left">
+                                <div class="leading-none">Administración</div>
+                                <span class="text-[10px] text-slate-400">Jefe: G. Torres</span>
+                            </div>
+                        </div>
+                        <span id="badge-ADMIN" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('COMUNICACIONES')" id="btn-area-COMUNICACIONES" data-area="COMUNICACIONES" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="ph ph-megaphone text-lg text-brand-cyan"></i>
+                            <div class="text-left">
+                                <div class="leading-none">Comunicaciones</div>
+                                <span class="text-[10px] text-slate-400">Jefe: E. Salinas</span>
+                            </div>
+                        </div>
+                        <span id="badge-COMUNICACIONES" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <button onclick="filterByArea('LOGISTICA')" id="btn-area-LOGISTICA" data-area="LOGISTICA" class="area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="ph ph-truck text-lg text-brand-gold"></i>
+                            <div class="text-left">
+                                <div class="leading-none">Logística</div>
+                                <span class="text-[10px] text-slate-400">Jefe: N. Kuck</span>
+                            </div>
+                        </div>
+                        <span id="badge-LOGISTICA" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Sidebar -->
+        <div class="p-4 border-t border-slate-800 bg-slate-950/50 text-xs text-slate-400 flex items-center justify-between">
+            <div>
+                <span class="block text-white font-bold">Campamento "Reino del Padre"</span>
+                <span id="cloudSyncStatus" class="text-[11px] text-brand-green flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-green inline-block"></span>
+                    <span>Sincronizado en tiempo real</span>
+                </span>
+            </div>
+            <button onclick="resetDefaultData()" title="Restaurar tareas originales" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition">
+                <i class="ph ph-arrows-counter-clockwise text-base"></i>
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-full overflow-hidden bg-brand-light">
+        
+        <!-- TOP HEADER -->
+        <header class="bg-white border-b border-brand-cyan/20 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0 z-10">
+            <div class="flex items-center space-x-3">
+                <button id="openSidebarBtn" class="md:hidden p-2 -ml-2 text-brand-dark hover:bg-brand-light rounded-lg">
+                    <i class="ph ph-list text-2xl"></i>
+                </button>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span id="currentAreaBadge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-red/10 text-brand-red border border-brand-red/20">Sección Completa</span>
+                        <span class="text-slate-300">•</span>
+                        <span id="currentLeaderText" class="text-xs text-slate-600 font-medium">Jefe de Sección: Mil. Agustín Piedrabuena • Secretario: Mil. Juan Jaramillo (Jr)</span>
+                    </div>
+                    <h2 id="mainHeaderTitle" class="text-lg font-extrabold text-brand-dark tracking-tight mt-0.5 font-brand">Tablero General • Campamento "Reino del Padre"</h2>
+                </div>
+            </div>
+
+            <!-- Controles Superiores -->
+            <div class="flex items-center space-x-3">
+                <button onclick="seedAllDataToFirestore(true)" id="btnSyncDbTop" title="Subir todas las tareas e integrantes a tu Firestore" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-gold/10 hover:bg-brand-gold/20 text-amber-900 border border-brand-gold/30 rounded-lg text-xs font-bold transition shrink-0">
+                    <i class="ph-bold ph-database text-sm text-brand-orange"></i>
+                    <span id="btnSyncDbText">Subir Todo a DB</span>
+                </button>
+
+                <button onclick="downloadReadyHtmlWithConfig()" title="Descargar index.html para subir a Netlify" class="hidden xl:flex items-center space-x-1.5 px-3 py-1.5 bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/30 rounded-lg text-xs font-bold transition">
+                    <i class="ph-bold ph-download-simple text-sm"></i>
+                    <span>Descargar index.html</span>
+                </button>
+
+                <button onclick="openLoginModal()" class="hidden lg:flex items-center space-x-2 px-3 py-1.5 bg-brand-light hover:bg-slate-200 border border-brand-cyan/20 rounded-lg text-xs transition">
+                    <i class="ph-fill ph-user-circle text-base text-brand-red"></i>
+                    <span id="topBarUserEmail" class="font-semibold text-brand-dark">Modo Comando (Piedra / Jr)</span>
+                    <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600">Cambiar</span>
+                </button>
+
+                <div class="relative flex-1 sm:w-56">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" oninput="renderKanban()" placeholder="Buscar tarea o jefe..." class="w-full pl-9 pr-4 py-2 bg-brand-light border border-transparent focus:bg-white focus:border-brand-cyan rounded-lg text-sm focus:outline-none transition">
+                </div>
+
+                <button onclick="openTaskModal()" class="flex items-center space-x-2 bg-brand-red hover:bg-brand-red/90 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition shrink-0">
+                    <i class="ph-bold ph-plus"></i>
+                    <span>Nueva Tarea</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="quickMilestonesBar" class="bg-brand-dark text-white px-6 py-2.5 flex items-center space-x-6 overflow-x-auto text-xs border-b border-brand-cyan/20 shrink-0">
+            <div class="flex items-center space-x-2 shrink-0 text-brand-gold font-semibold">
+                <i class="ph-fill ph-flag-banner text-base"></i>
+                <span>FECHAS CLAVE:</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="px-2 py-0.5 bg-brand-green/20 text-brand-green border border-brand-green/30 rounded font-medium">11 Sep</span>
+                <span class="text-slate-300">Cierre Planilla Costos</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="px-2 py-0.5 bg-brand-green/20 text-brand-green border border-brand-green/30 rounded font-medium">15 Sep</span>
+                <span class="text-slate-300">Pesimistas y Becas</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="px-2 py-0.5 bg-brand-orange/20 text-brand-gold border border-brand-orange/30 rounded font-medium animate-pulse">19-23 Oct</span>
+                <span class="text-white font-semibold">Reunión Nacional Evaluación</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="px-2 py-0.5 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded font-medium">Diciembre</span>
+                <span class="text-slate-300">Entrega ODD y Proy. Escuadras</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <span class="px-2 py-0.5 bg-brand-red/20 text-brand-red border border-brand-red/30 rounded font-medium">Campamento</span>
+                <span class="text-slate-300">Día 1 (Inicio) • Día 3 (Bautismo) • Día 4 (Reino) • Día 8 (Alianza)</span>
+            </div>
+        </div>
+
+        <main id="view-kanban" class="flex-1 overflow-x-auto overflow-y-hidden p-6">
+            <div class="h-full flex space-x-5 min-w-[1050px]">
+                
+                <!-- COLUMNA 1: POR HACER -->
+                <div class="flex-1 flex flex-col bg-slate-200/80 rounded-xl border border-slate-300/60 max-w-sm">
+                    <div class="p-3.5 flex items-center justify-between border-b border-slate-300/80">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-brand-dark">Por Hacer (Pendientes)</h3>
+                        </div>
+                        <span id="count-TODO" class="text-xs font-bold bg-slate-300 text-slate-700 px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-TODO" data-status="TODO" class="kanban-col flex-1 p-3 overflow-y-auto space-y-3 transition-colors" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'TODO')"></div>
+                </div>
+
+                <!-- COLUMNA 2: EN CURSO -->
+                <div class="flex-1 flex flex-col bg-slate-200/80 rounded-xl border border-slate-300/60 max-w-sm">
+                    <div class="p-3.5 flex items-center justify-between border-b border-slate-300/80">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-brand-cyan"></span>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-brand-dark">En Curso / Preparación</h3>
+                        </div>
+                        <span id="count-IN_PROGRESS" class="text-xs font-bold bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-IN_PROGRESS" data-status="IN_PROGRESS" class="kanban-col flex-1 p-3 overflow-y-auto space-y-3 transition-colors" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'IN_PROGRESS')"></div>
+                </div>
+
+                <!-- COLUMNA 3: EN REVISIÓN -->
+                <div class="flex-1 flex flex-col bg-slate-200/80 rounded-xl border border-slate-300/60 max-w-sm">
+                    <div class="p-3.5 flex items-center justify-between border-b border-slate-300/80">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-brand-orange"></span>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-brand-dark">En Revisión / Comando</h3>
+                        </div>
+                        <span id="count-REVIEW" class="text-xs font-bold bg-brand-orange/20 text-amber-900 px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-REVIEW" data-status="REVIEW" class="kanban-col flex-1 p-3 overflow-y-auto space-y-3 transition-colors" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'REVIEW')"></div>
+                </div>
+
+                <!-- COLUMNA 4: COMPLETADO -->
+                <div class="flex-1 flex flex-col bg-slate-200/80 rounded-xl border border-slate-300/60 max-w-sm">
+                    <div class="p-3.5 flex items-center justify-between border-b border-slate-300/80">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-brand-green"></span>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-brand-dark">Listo / Cerrado</h3>
+                        </div>
+                        <span id="count-DONE" class="text-xs font-bold bg-brand-green/20 text-brand-green px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-DONE" data-status="DONE" class="kanban-col flex-1 p-3 overflow-y-auto space-y-3 transition-colors" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'DONE')"></div>
+                </div>
+
+            </div>
+        </main>
+
+        <main id="view-directory" class="hidden flex-1 overflow-y-auto p-6 space-y-8">
+            <div class="bg-brand-dark text-white p-5 rounded-2xl border border-brand-cyan/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Nómina Oficial Sincronizada con el Chat de WhatsApp</span>
+                    <h3 class="text-lg font-bold mt-0.5 font-brand">Campamento "Reino del Padre" • 29 Integrantes (24 Mails cargados)</h3>
+                    <p class="text-xs text-slate-300 mt-1">Haz clic en <strong>"Simular vista"</strong> en cualquier tarjeta para comprobar cómo filtra la app al entrar con ese correo.</p>
+                </div>
+                <button onclick="copyAllEmails()" class="px-4 py-2.5 bg-brand-red hover:bg-brand-red/90 text-white rounded-xl text-xs font-bold transition flex items-center space-x-2 shrink-0 self-start md:self-auto">
+                    <i class="ph-bold ph-copy text-base"></i>
+                    <span id="copyEmailsBtnText">Copiar los 24 Mails para Drive</span>
+                </button>
+            </div>
+
+            <!-- Jefatura -->
+            <section>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="ph-fill ph-crown text-xl text-brand-gold"></i>
+                    <h3 class="text-lg font-bold text-brand-dark font-brand">Jefatura de Sección y Asesoría Espiritual</h3>
+                </div>
+                <div id="directoryJefaturaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+            </section>
+
+            <!-- Subsecciones -->
+            <section>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="ph-fill ph-flag-pennant text-xl text-brand-cyan"></i>
+                    <h3 class="text-lg font-bold text-brand-dark font-brand">Subsecciones (Acceso filtrado por rol)</h3>
+                </div>
+                <div id="directorySubsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+            </section>
+
+            <!-- Departamentos -->
+            <section>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="ph-fill ph-briefcase text-xl text-brand-orange"></i>
+                    <h3 class="text-lg font-bold text-brand-dark font-brand">Departamentos Operativos</h3>
+                </div>
+                <div id="directoryDeptosGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+            </section>
+        </main>
+
+        <main id="view-timeline" class="hidden flex-1 overflow-y-auto p-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-brand-dark font-brand">Hoja de Ruta y Fechas Clave del Proyecto</h3>
+                    <p class="text-sm text-slate-600 mt-1">Seguimiento cronológico de entregas previas y días troncales del Campamento.</p>
+
+                    <div class="mt-8 relative border-l-2 border-brand-cyan/40 ml-4 space-y-8">
+                        <div class="relative pl-8">
+                            <span class="absolute -left-2.5 top-1 w-5 h-5 rounded-full bg-brand-green border-4 border-white shadow"></span>
+                            <div class="bg-brand-light/60 p-4 rounded-xl border border-brand-cyan/20">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-brand-green/20 text-brand-green">11 de Septiembre</span>
+                                    <span class="text-xs font-medium text-slate-600">Administración & Actividades</span>
+                                </div>
+                                <h4 class="font-bold text-brand-dark mt-2 font-brand">Cierre de Planilla de Costos</h4>
+                                <p class="text-sm text-slate-700 mt-1">Tener cerrada la planilla contemplando actividades extraordinarias y de alto valor.</p>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-8">
+                            <span class="absolute -left-2.5 top-1 w-5 h-5 rounded-full bg-brand-green border-4 border-white shadow"></span>
+                            <div class="bg-brand-light/60 p-4 rounded-xl border border-brand-cyan/20">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-brand-green/20 text-brand-green">15 de Septiembre</span>
+                                    <span class="text-xs font-medium text-slate-600">Administración & Secretaría</span>
+                                </div>
+                                <h4 class="font-bold text-brand-dark mt-2 font-brand">Listado de Pesimistas y Becas</h4>
+                                <p class="text-sm text-slate-700 mt-1">Enviar listado oficial de pesimistas y relevamiento de becas de hermanos.</p>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-8">
+                            <span class="absolute -left-2.5 top-1 w-5 h-5 rounded-full bg-brand-orange border-4 border-white shadow animate-pulse"></span>
+                            <div class="bg-brand-gold/10 p-4 rounded-xl border border-brand-gold/30">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-brand-gold/20 text-amber-900">19 al 23 de Octubre (Hito Actual)</span>
+                                    <span class="text-xs font-medium text-amber-900">Jefatura, Subsecciones y Deptos</span>
+                                </div>
+                                <h4 class="font-bold text-brand-dark mt-2 font-brand">Reunión Nacional de Evaluación y Seguimiento</h4>
+                                <p class="text-sm text-slate-700 mt-1">Revisión de reuniones orgánicas, validación de planificación con departamentos y estado de avance.</p>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-8">
+                            <span class="absolute -left-2.5 top-1 w-5 h-5 rounded-full bg-brand-cyan border-4 border-white shadow"></span>
+                            <div class="bg-brand-light/60 p-4 rounded-xl border border-brand-cyan/20">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan">Diciembre</span>
+                                    <span class="text-xs font-medium text-slate-600">Jefatura y Jefes de Subsección</span>
+                                </div>
+                                <h4 class="font-bold text-brand-dark mt-2 font-brand">Entrega de ODD Interna, Nombres y Proyecto de Escuadras</h4>
+                                <p class="text-sm text-slate-700 mt-1">Consolidación de los grupos armados por cada subsección y entrega formal de la ODD interna.</p>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-8">
+                            <span class="absolute -left-2.5 top-1 w-5 h-5 rounded-full bg-brand-red border-4 border-white shadow"></span>
+                            <div class="bg-brand-red/5 p-5 rounded-xl border border-brand-red/20 space-y-4">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-brand-red text-white">Fechas del Campamento (MDZ 2027)</span>
+                                    <span class="text-xs font-medium text-brand-red">Ejecución en Terreno (8 Días)</span>
+                                </div>
+                                <h4 class="font-bold text-brand-dark text-base font-brand">Hitos Troncales durante el Campamento</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                    <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                                        <span class="text-xs font-bold text-brand-red uppercase">Día 1 • Inicio del Campamento</span>
+                                        <p class="text-xs text-slate-600 mt-1">Mística de apertura (línea medieval + referentes como Carlo Acutis, San Pedro o San Pablo). Relato introductorio "Ser Hijo".</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                                        <span class="text-xs font-bold text-brand-red uppercase">Día 3 • Día del Bautismo</span>
+                                        <p class="text-xs text-slate-600 mt-1">Cierre del Bloque 1. Momento clave para la entrega del Signo de Paternidad.</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                                        <span class="text-xs font-bold text-brand-red uppercase">Día 4 • Construcción del Reino</span>
+                                        <p class="text-xs text-slate-600 mt-1">Cada subsección construye su propio "Reino" / Capilla en el taller de carpintería con libertad organizativa.</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                                        <span class="text-xs font-bold text-brand-red uppercase">Día 8 • Cierre y Alianza</span>
+                                        <p class="text-xs text-slate-600 mt-1">Culminación del elemento visible construido progresivamente y ceremonia de Alianza.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <main id="view-hosting" class="hidden flex-1 overflow-y-auto p-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-brand-dark text-white p-6 rounded-2xl border border-brand-cyan/20 shadow-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-xl bg-brand-cyan/20 border border-brand-cyan/30 text-brand-cyan flex items-center justify-center text-2xl">
+                            <i class="ph-fill ph-cloud-check"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Arquitectura Serverless 100% Gratuita</span>
+                            <h3 class="text-xl font-bold font-brand">¿Dónde hostear el Backend gratis y cómo activar Google Login?</h3>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-300 mt-3 leading-relaxed">
+                        Este archivo ya está conectado a tu proyecto de Firebase <strong>reino-del-padre</strong> y filtra automáticamente los 24 correos del grupo de WhatsApp.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border-2 border-brand-green shadow-md space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded bg-brand-green/20 text-brand-green">Proyecto Conectado</span>
+                            <h4 class="text-lg font-extrabold text-brand-dark mt-1 font-brand">Firebase "reino-del-padre" vinculado</h4>
+                        </div>
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-xl bg-brand-green/20 text-brand-green shrink-0">
+                            ✓ Conectado: reino-del-padre
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="space-y-2.5 text-xs text-slate-700 bg-brand-light p-4 rounded-xl border border-brand-cyan/20">
+                            <div class="font-bold text-brand-dark uppercase tracking-wider text-[11px] mb-2">Verifica estos pasos en tu consola de Firebase:</div>
+                            <div class="flex items-start space-x-2">
+                                <span class="w-5 h-5 rounded-full bg-brand-green text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">✓</span>
+                                <span>Proyecto <strong>reino-del-padre</strong> configurado.</span>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="w-5 h-5 rounded-full bg-brand-red text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
+                                <span>En Firebase ve a <strong>Authentication → Proveedor Google → Habilitar</strong>.</span>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="w-5 h-5 rounded-full bg-brand-red text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
+                                <span>En <strong>Firestore Database</strong> asegúrate de tener creada la base de datos.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col justify-between space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Configuración Activa:</label>
+                                <textarea id="firebaseConfigInput" rows="5" class="w-full p-3 font-mono text-xs bg-brand-dark text-brand-cyan rounded-xl border border-slate-700 focus:outline-none">{
+  "apiKey": "AIzaSyDBE0C1QrY3lRvsgf_W5GYw-JvV-jUcWVQ",
+  "authDomain": "reino-del-padre.firebaseapp.com",
+  "projectId": "reino-del-padre",
+  "storageBucket": "reino-del-padre.firebasestorage.app",
+  "messagingSenderId": "937851660879",
+  "appId": "1:937851660879:web:9df9879f1900b6aba2d83a",
+  "measurementId": "G-BPNJ3ZVZMQ"
+}</textarea>
+                                <p class="text-xs font-bold mt-1 text-brand-green block">✓ Credenciales oficiales cargadas.</p>
+                            </div>
+                            <button onclick="downloadReadyHtmlWithConfig()" class="w-full bg-brand-green hover:bg-brand-green/90 text-white py-2.5 px-4 rounded-xl text-xs font-bold shadow-sm transition flex items-center justify-center space-x-2">
+                                <i class="ph-bold ph-download-simple text-base"></i>
+                                <span>Descargar index.html para Netlify / Vercel</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="taskModal" class="fixed inset-0 bg-brand-dark/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-brand-dark text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="ph-fill ph-shield-cross text-brand-red text-xl"></i>
+                    <h3 id="modalTitle" class="font-bold text-base font-brand">Nueva Tarea del Proyecto</h3>
+                </div>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+            </div>
+
+            <form id="taskForm" onsubmit="saveTask(event)" class="p-6 space-y-4">
+                <input type="hidden" id="taskId">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Título de la Tarea *</label>
+                    <input type="text" id="taskTitle" required placeholder="Ej: Construir el Reino / Capilla en taller" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand-cyan">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Descripción / Detalles Operativos</label>
+                    <textarea id="taskDesc" rows="3" placeholder="Especificaciones y criterios del comando..." class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand-cyan"></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Subsección / Departamento *</label>
+                        <select id="taskArea" onchange="autoFillAssignee()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-cyan">
+                            <option value="JEFATURA">Jefatura y Comando</option>
+                            <option value="SUB1">Subsección 1 (B. Araoz)</option>
+                            <option value="SUB2">Subsección 2 (M. Andres)</option>
+                            <option value="SUB3">Subsección 3 (S. Sariago)</option>
+                            <option value="SUB4">Subsección 4 (D. Maldonado)</option>
+                            <option value="FORDOC">Depto. For Doc (S. Andrada)</option>
+                            <option value="ACTIVIDADES">Depto. Actividades (A. Almada)</option>
+                            <option value="ADMIN">Depto. Administración (G. Torres)</option>
+                            <option value="COMUNICACIONES">Depto. Comunicaciones (E. Salinas)</option>
+                            <option value="LOGISTICA">Depto. Logística (N. Kuck)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Responsable Directo *</label>
+                        <input type="text" id="taskAssignee" required placeholder="Ej: Mil. Benjamín Araoz" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand-cyan">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Fecha / Hito *</label>
+                        <input type="text" id="taskDueDate" required list="hitosList" placeholder="Ej: 19 al 23 Oct" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand-cyan">
+                        <datalist id="hitosList">
+                            <option value="11 de Septiembre">
+                            <option value="15 de Septiembre">
+                            <option value="19 al 23 de Octubre">
+                            <option value="Diciembre">
+                            <option value="Pre-Campamento">
+                            <option value="Día 1 (Inicio)">
+                            <option value="Día 3 (Bautismo)">
+                            <option value="Día 4 (Reino)">
+                            <option value="Día 8 (Alianza)">
+                        </datalist>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Prioridad</label>
+                        <select id="taskPriority" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-cyan">
+                            <option value="ALTA">Alta / Crítica</option>
+                            <option value="MEDIA">Media</option>
+                            <option value="BAJA">Baja</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-700 mb-1">Estado</label>
+                        <select id="taskStatus" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:border-brand-cyan">
+                            <option value="TODO">Por Hacer</option>
+                            <option value="IN_PROGRESS">En Curso</option>
+                            <option value="REVIEW">En Revisión</option>
+                            <option value="DONE">Completado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                    <button type="button" id="deleteTaskBtn" onclick="deleteCurrentTask()" class="hidden px-3 py-2 text-xs font-bold text-brand-red hover:bg-red-50 rounded-lg transition">Eliminar Tarea</button>
+                    <div class="flex items-center space-x-2 ml-auto">
+                        <button type="button" onclick="closeTaskModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">Cancelar</button>
+                        <button type="submit" class="px-5 py-2 text-sm font-semibold bg-brand-red hover:bg-brand-red/90 text-white rounded-lg shadow-sm transition">Guardar Tarea</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+      import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+      import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, where, runTransaction } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+      const app = initializeApp({
+            apiKey: "AIzaSyDBE0C1QrY3lRvsgf_W5GYw-JvV-jUcWVQ",
+            authDomain: "reino-del-padre.firebaseapp.com",
+            projectId: "reino-del-padre",
+            storageBucket: "reino-del-padre.firebasestorage.app",
+            messagingSenderId: "937851660879",
+            appId: "1:937851660879:web:9df9879f1900b6aba2d83a",
+            measurementId: "G-BPNJ3ZVZMQ"
+        });
+      const auth = getAuth(app), db = getFirestore(app);
+      const tasksRef = collection(db, 'artifacts/reino-del-padre-tm/public/data/tasks');
+      const metaRef = doc(db, 'artifacts/reino-del-padre-tm/private/meta');
+      let unsubscribe = null, generation = 0;
+      let serverTasks = [];
+      function report(message) {
+        const el = document.getElementById('loginErrorMsg');
+        el.textContent = message; el.classList.remove('hidden');
+        const status = document.getElementById('cloudSyncStatus');
+        if (status) status.textContent = message;
+      }
+      function resetSession() {
+        if (unsubscribe) unsubscribe(); unsubscribe = null;
+        window.authenticatedMember = null; serverTasks = []; window.tasks = [];
+        window.renderKanban?.(); window.openLoginModal();
+      }
+      window.signInWithGoogleReal = async function() {
+        try {
+          const provider = new GoogleAuthProvider(); provider.setCustomParameters({prompt:'select_account'});
+          await signInWithPopup(auth, provider);
+        } catch (e) {
+          const errors = {'auth/unauthorized-domain':'Este dominio aún no está autorizado en Firebase.', 'auth/popup-blocked':'Permití las ventanas emergentes para iniciar sesión.', 'auth/popup-closed-by-user':'Se cerró la ventana. Volvé a intentar.', 'auth/network-request-failed':'No se pudo conectar. Revisá tu conexión.'};
+          report(errors[e.code] || `No se pudo iniciar sesión (${e.code || 'error'}).`);
+        }
+      };
+      window.logoutWorkspace = async () => { await signOut(auth); };
+      window.downloadReadyHtmlWithConfig = async () => { const response = await fetch('./index.html'); const url = URL.createObjectURL(await response.blob()); const link = document.createElement('a'); link.href = url; link.download = 'index.html'; link.click(); URL.revokeObjectURL(url); };
+      onAuthStateChanged(auth, async user => {
+        const token = ++generation; resetSession();
+        if (!user || !user.emailVerified) return;
+        const member = window.USER_DIRECTORY.find(m => m.email.toLowerCase() === user.email.toLowerCase());
+        if (!member) { await signOut(auth); report('Tu correo no está autorizado. Contactá a Jefatura.'); return; }
+        window.authenticatedMember = member;
+        window.acceptAuthenticatedUser(member);
+        const target = member.canSeeAll ? tasksRef : query(tasksRef, where('area','in',[member.area,'JEFATURA']));
+        unsubscribe = onSnapshot(target, snap => {
+          if (token !== generation) return;
+          serverTasks = snap.docs.map(d => d.data()).sort((a,b) => a.id.localeCompare(b.id));
+          window.tasks = structuredClone(serverTasks); window.renderKanban();
+          document.getElementById('cloudSyncStatus').textContent = `Sincronizado: ${serverTasks.length} tareas`;
+          document.getElementById('btnSyncDbText').textContent = 'Sincronizado';
+        }, e => report(`No se pudo leer la base (${e.code}). Revisá los permisos.`));
+      });
+      function canWrite(task) {
+        const m = window.authenticatedMember;
+        return auth.currentUser?.emailVerified && m && (m.canSeeAll || task.area === m.area);
+      }
+      async function write(operation) {
+        try { await operation(); }
+        catch (e) {
+          window.tasks = structuredClone(serverTasks); window.renderKanban();
+          alert(`No se guardó el cambio: ${e.code || e.message}`); throw e;
+        }
+      }
+      window.saveTaskToCloud = task => write(async () => {
+        const previous = serverTasks.find(t => t.id === task.id);
+        if (!canWrite(task) || (previous && !canWrite(previous))) throw new Error('No tenés permiso para editar esta tarea.');
+        await setDoc(doc(tasksRef, task.id), task);
+      });
+      window.deleteTaskFromCloud = id => write(async () => {
+        const task = serverTasks.find(t => t.id === id);
+        if (!task || !canWrite(task)) throw new Error('No tenés permiso para eliminar esta tarea.');
+        await deleteDoc(doc(tasksRef,id));
+      });
+      // Explicit, idempotent initialization: existing tasks are never overwritten.
+      window.seedAllDataToFirestore = () => write(async () => {
+        if (!window.authenticatedMember?.canSeeAll) throw new Error('Solo Jefatura puede cargar las tareas iniciales.');
+        await runTransaction(db, async tx => {
+          const meta = await tx.get(metaRef);
+          if (meta.exists() && meta.data().initialized) return;
+          const refs = window.INITIAL_TASKS.map(t => doc(tasksRef,t.id));
+          const existing = [];
+          for (const ref of refs) existing.push(await tx.get(ref));
+          refs.forEach((ref,i) => { if (!existing[i].exists()) tx.set(ref, window.INITIAL_TASKS[i]); });
+          tx.set(metaRef,{initialized:true});
+        });
+        document.getElementById('btnSyncDbText').textContent = 'Carga inicial completada';
+      });
+    </script>
+
+
+    <script>
+        const USER_DIRECTORY = [
+            { name: 'Mil. Agustín Piedrabuena (Piedra)', fortin: 'Chapelco', roleTitle: 'Jefe de Sección', area: 'JEFATURA', email: 'agustinpiedrabuena461@gmail.com', emailStatus: 'Acceso Total', canSeeAll: true },
+            { name: 'Mil. Juan Jaramillo (Jr)', fortin: 'Chapelco', roleTitle: 'Secretario de Sección', area: 'JEFATURA', email: 'jjuanandres4@gmail.com', emailStatus: 'Acceso Total', canSeeAll: true },
+            { name: 'Mil. Pbto. Gregorio Álvarez', fortin: 'Asesoría', roleTitle: 'Sacerdote Capellán', area: 'JEFATURA', email: 'gregorioalvarez@comando.tm', emailStatus: 'Asesoría', canSeeAll: true },
+            { name: 'Mil. Francisco Volpe (Paco)', fortin: 'Asesoría', roleTitle: 'Seminarista', area: 'JEFATURA', email: 'franciscovolpe@comando.tm', emailStatus: 'Asesoría', canSeeAll: true },
+
+            { name: 'Mil. Benjamín Araoz', fortin: 'Boisdron', roleTitle: 'Jefe Subsección 1', area: 'SUB1', email: 'benjaminaraoz@sub1.tm', emailStatus: 'Pendiente', canSeeAll: false },
+            { name: 'Mil. Javier Mignone', fortin: 'Pampero', roleTitle: 'Subjefe Sub 1', area: 'SUB1', email: 'javi.mignone5@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Facundo Finneti', fortin: 'Amulen', roleTitle: 'Subjefe Sub 1', area: 'SUB1', email: 'facundofinetti@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Julián Toledo', fortin: 'Aluminé', roleTitle: 'Subjefe Sub 1', area: 'SUB1', email: 'juliantoledo@sub1.tm', emailStatus: 'Pendiente', canSeeAll: false },
+            { name: 'Mil. Jose Ponce', fortin: 'Ayllú', roleTitle: 'Subjefe Sub 1', area: 'SUB1', email: 'joseponce@sub1.tm', emailStatus: 'Pendiente', canSeeAll: false },
+            { name: 'Mil. Ciro Martinez', fortin: 'Choroy', roleTitle: 'Subjefe Sub 1', area: 'SUB1', email: 'ciromartinez@sub1.tm', emailStatus: 'Pendiente', canSeeAll: false },
+
+            { name: 'Mil. Mateo Andres', fortin: 'Tucún', roleTitle: 'Jefe Subsección 2', area: 'SUB2', email: 'mateeeandres@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Lautaro Ceballos', fortin: 'Manqué', roleTitle: 'Subjefe Sub 2', area: 'SUB2', email: 'ceballoslauty2@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Bautista Zayún', fortin: 'Takay', roleTitle: 'Subjefe Sub 2', area: 'SUB2', email: 'zayunbautista@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Lucas Arias', fortin: 'Llahué', roleTitle: 'Subjefe Sub 2', area: 'SUB2', email: 'lucasarias458@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Juan Cruz Fernandez', fortin: 'Chapelco', roleTitle: 'Subjefe Sub 2', area: 'SUB2', email: 'jcfernandez2611@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+
+            { name: 'Mil. Samuel Sariago', fortin: 'Laetare', roleTitle: 'Jefe Subsección 3', area: 'SUB3', email: 'samusariago@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Nahún de la Cuesta', fortin: 'Pampero', roleTitle: 'Subjefe Sub 3', area: 'SUB3', email: 'nahundelacuesta@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Andres Arroyo', fortin: 'Allyú', roleTitle: 'Subjefe Sub 3', area: 'SUB3', email: 'andres678922@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Santino Paganini', fortin: 'Mavúl', roleTitle: 'Subjefe Sub 3', area: 'SUB3', email: 'santinopaga07@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Joaquín Meyer', fortin: 'Carahue', roleTitle: 'Subjefe Sub 3', area: 'SUB3', email: 'joaquinmeyercba@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+
+            { name: 'Mil. Dardo Maldonado', fortin: 'Mavúl', roleTitle: 'Jefe Subsección 4', area: 'SUB4', email: 'dardomaldonado7@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Matias Lopez', fortin: 'Pampero', roleTitle: 'Subjefe Sub 4', area: 'SUB4', email: 'matiasezequielopez@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Santiago Viejobueno', fortin: 'Boisdron', roleTitle: 'Subjefe Sub 4', area: 'SUB4', email: 'santiagoviejobueno6@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Bernardo Lucca', fortin: 'Curá', roleTitle: 'Subjefe Sub 4', area: 'SUB4', email: 'bluccalemos@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Jose Haller', fortin: 'Chapelco', roleTitle: 'Subjefe Sub 4', area: 'SUB4', email: 'joseignaciohaller@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+
+            { name: 'Mil. Santiago Andrada', fortin: 'Del Plata', roleTitle: 'Jefe Depto. For Doc', area: 'FORDOC', email: 'santiandrada01@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Tobías Arroyo', fortin: 'Allyú', roleTitle: 'Subjefe For Doc', area: 'FORDOC', email: 'tobiasarroyo90@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Julián Ahumada', fortin: 'Chapelco', roleTitle: 'Subjefe For Doc', area: 'FORDOC', email: 'julianahumada86@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Augusto Almada', fortin: 'Champaquí', roleTitle: 'Jefe Depto. Actividades', area: 'ACTIVIDADES', email: 'almadaaugusto39@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Gabriel Torres', fortin: 'Champaquí', roleTitle: 'Jefe Depto. Administración', area: 'ADMIN', email: 'gabrieltorres@admin.tm', emailStatus: 'Pendiente', canSeeAll: false },
+            { name: 'Mil. Eduardo Salinas', fortin: 'Aluminé', roleTitle: 'Jefe Depto. Comunicaciones', area: 'COMUNICACIONES', email: 'salinaseduardo.mkt@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Lautaro Menacho', fortin: 'Cunumi', roleTitle: 'Subjefe Comunicaciones', area: 'COMUNICACIONES', email: 'lautaromenacho@comu.tm', emailStatus: 'Pendiente', canSeeAll: false },
+            { name: 'Mil. Nicolás Kuck', fortin: 'Del Plata', roleTitle: 'Jefe Depto. Logística', area: 'LOGISTICA', email: 'ngkuck@gmail.com', emailStatus: 'Confirmado', canSeeAll: false },
+            { name: 'Mil. Nicolás Heredia', fortin: 'Divina Misericordia', roleTitle: 'Subjefe Logística', area: 'LOGISTICA', email: 'herediarobertonicolas@gmail.com', emailStatus: 'Confirmado', canSeeAll: false }
+        ];
+        window.USER_DIRECTORY = USER_DIRECTORY;
+
+        const AREAS_CONFIG = {
+            ALL: { name: 'Sección Completa', title: 'Tablero General • Campamento "Reino del Padre"', leader: 'Jefe: Mil. Agustín Piedrabuena • Secretario: Mil. Juan Jaramillo (Jr)', badgeClass: 'bg-brand-red/10 text-brand-red border-brand-red/20', defaultAssignee: 'Mil. Agustín Piedrabuena' },
+            JEFATURA: { name: 'Jefatura y Comando', title: 'Tablero de Jefatura y Asesoría', leader: 'Mil. Agustín Piedrabuena, Mil. Juan Jaramillo, Pbto. Gregorio Álvarez, Sem. Francisco Volpe', badgeClass: 'bg-amber-100 text-amber-900 border-amber-300', defaultAssignee: 'Mil. Agustín Piedrabuena' },
+            SUB1: { name: 'Subsección 1', title: 'Tablero Subsección 1', leader: 'Jefe: Mil. Benjamín Araoz (Boisdron)', badgeClass: 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20', defaultAssignee: 'Mil. Benjamín Araoz' },
+            SUB2: { name: 'Subsección 2', title: 'Tablero Subsección 2', leader: 'Jefe: Mil. Mateo Andres (Tucún)', badgeClass: 'bg-brand-green/10 text-brand-green border-brand-green/20', defaultAssignee: 'Mil. Mateo Andres' },
+            SUB3: { name: 'Subsección 3', title: 'Tablero Subsección 3', leader: 'Jefe: Mil. Samuel Sariago (Laetare)', badgeClass: 'bg-brand-orange/10 text-amber-900 border-brand-orange/20', defaultAssignee: 'Mil. Samuel Sariago' },
+            SUB4: { name: 'Subsección 4', title: 'Tablero Subsección 4', leader: 'Jefe: Mil. Dardo Maldonado (Mavúl)', badgeClass: 'bg-brand-red/10 text-brand-red border-brand-red/20', defaultAssignee: 'Mil. Dardo Maldonado' },
+            FORDOC: { name: 'Depto. For Doc', title: 'Tablero de Formación y Doctrina', leader: 'Jefe: Mil. Santiago Andrada (Del Plata)', badgeClass: 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20', defaultAssignee: 'Mil. Santiago Andrada' },
+            ACTIVIDADES: { name: 'Depto. Actividades', title: 'Tablero de Actividades', leader: 'Jefe: Mil. Augusto Almada (Champaquí)', badgeClass: 'bg-brand-orange/10 text-amber-900 border-brand-orange/20', defaultAssignee: 'Mil. Augusto Almada' },
+            ADMIN: { name: 'Depto. Administración', title: 'Tablero de Administración', leader: 'Jefe: Mil. Gabriel Torres (Champaquí)', badgeClass: 'bg-brand-green/10 text-brand-green border-brand-green/20', defaultAssignee: 'Mil. Gabriel Torres' },
+            COMUNICACIONES: { name: 'Depto. Comunicaciones', title: 'Tablero de Comunicaciones', leader: 'Jefe: Mil. Eduardo Salinas (Aluminé)', badgeClass: 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20', defaultAssignee: 'Mil. Eduardo Salinas' },
+            LOGISTICA: { name: 'Depto. Logística', title: 'Tablero de Logística e Intendencia', leader: 'Jefe: Mil. Nicolás Kuck (Del Plata)', badgeClass: 'bg-brand-gold/10 text-amber-900 border-brand-gold/30', defaultAssignee: 'Mil. Nicolás Kuck' }
+        };
+
+        const INITIAL_TASKS = [
+            { id: 'TM-01', title: 'Cerrar planilla de costos (actividades extraordinarias)', desc: 'Consolidar presupuesto final contemplando actividades de alto valor.', area: 'ADMIN', assignee: 'Mil. Gabriel Torres', dueDate: '11 de Septiembre', priority: 'ALTA', status: 'DONE' },
+            { id: 'TM-02', title: 'Enviar listado de pesimistas y becas de hermanos', desc: 'Relevar y remitir la nómina actualizada de pesimistas y becas.', area: 'ADMIN', assignee: 'Mil. Gabriel Torres & Mil. Juan Jaramillo', dueDate: '15 de Septiembre', priority: 'ALTA', status: 'DONE' },
+            { id: 'TM-03', title: 'Reuniones orgánicas con departamentos y subsecciones', desc: 'Revisar toda la planificación de los 8 días con cada responsable.', area: 'JEFATURA', assignee: 'Mil. Agustín Piedrabuena & Mil. Juan Jaramillo', dueDate: '19 al 23 de Octubre', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-04', title: 'Reunión Nacional de Evaluación y Seguimiento', desc: 'Presentación de avances y estructura de mando en instancia nacional.', area: 'JEFATURA', assignee: 'Mil. Agustín Piedrabuena', dueDate: '19 al 23 de Octubre', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-05', title: 'Definir signo/objeto de paternidad y momento de entrega', desc: 'Fijar entrega exacta: Día 1 o cierre del Bloque 1 en el Día 3.', area: 'JEFATURA', assignee: 'Mil. Agustín Piedrabuena & Pbto. Gregorio Álvarez', dueDate: 'Día 1 o Día 3 (Bautismo)', priority: 'ALTA', status: 'REVIEW' },
+            { id: 'TM-06', title: 'Entrega de ODD interna General de la Sección', desc: 'Consolidar Orden del Día interna, nombres y proyecto de escuadras.', area: 'JEFATURA', assignee: 'Mil. Juan Jaramillo (Secretario)', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-07', title: 'Revisión bíblica de los 8 días del guión', desc: 'Confirmar citas bíblicas correspondientes a cada día junto a asesoría.', area: 'FORDOC', assignee: 'Mil. Santiago Andrada & Pbto. G. Álvarez', dueDate: '19 al 23 de Octubre', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-08', title: 'Seleccionar o redactar relato introductorio "Ser Hijo"', desc: 'Definir historia para introducir el tema central en el Día 1.', area: 'FORDOC', assignee: 'Mil. Tobías Arroyo & Mil. Julián Ahumada', dueDate: 'Día 1 (Inicio)', priority: 'MEDIA', status: 'TODO' },
+            { id: 'TM-09', title: 'Preparación litúrgica: Día del Bautismo y Alianza', desc: 'Coordinar guiones para Día 3 y Día 8.', area: 'FORDOC', assignee: 'Pbto. Gregorio Álvarez & Sem. Francisco Volpe', dueDate: 'Día 3 y Día 8', priority: 'MEDIA', status: 'TODO' },
+            { id: 'TM-10', title: 'Definir formato del Día 4 (Jornada completa o media)', desc: 'Resolver si la Construcción del Reino ocupará jornada completa.', area: 'ACTIVIDADES', assignee: 'Mil. Augusto Almada', dueDate: '19 al 23 de Octubre', priority: 'ALTA', status: 'REVIEW' },
+            { id: 'TM-11', title: 'Confirmar mística de apertura (Medieval + Referentes)', desc: 'Combinar línea medieval con referentes como Carlo Acutis o San Pedro.', area: 'COMUNICACIONES', assignee: 'Mil. Eduardo Salinas & Mil. Lautaro Menacho', dueDate: 'Día 1 (Inicio)', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-12', title: 'Definir el "elemento visible" de construcción progresiva', desc: 'Pautar el elemento visible que se construirá día a día hasta el Día 8.', area: 'ACTIVIDADES', assignee: 'Mil. Augusto Almada & Mil. Eduardo Salinas', dueDate: 'Durante los 8 Días', priority: 'MEDIA', status: 'TODO' },
+            { id: 'TM-13', title: 'Diseñar taller sobre cómo planificar un día integral', desc: 'Preparar en conjunto taller formativo de planificación diaria.', area: 'LOGISTICA', assignee: 'Mil. Nicolás Kuck', dueDate: 'Pre-Campamento', priority: 'MEDIA', status: 'IN_PROGRESS' },
+            { id: 'TM-14', title: 'Montar carpa estructural de intendencia', desc: 'Coordinar disposición de carpa exclusiva de intendencia.', area: 'LOGISTICA', assignee: 'Mil. Nicolás Kuck & Mil. Nicolás Heredia', dueDate: 'Día 1 (Inicio)', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-15', title: 'Cargar inventario completo en la aplicación nacional', desc: 'Relevar herramientas y materiales de carpintería.', area: 'LOGISTICA', assignee: 'Mil. Nicolás Heredia', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-16', title: 'Sub 1: Armar grupos y coordinar reuniones previas', desc: 'Organizar acampantes y cronograma con subjefes (Mignone, Toledo, etc.).', area: 'SUB1', assignee: 'Mil. Benjamín Araoz', dueDate: 'Pre-Campamento', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-17', title: 'Sub 1: ODD interna y proyecto de escuadras', desc: 'Definir nombres y presentar proyecto de escuadras Sub 1.', area: 'SUB1', assignee: 'Mil. Benjamín Araoz & Subjefes Sub 1', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-18', title: 'Sub 1: Construcción del Reino / Capilla en taller', desc: 'Día 4: Construir Capilla administrando tiempos y recursos.', area: 'SUB1', assignee: 'Mil. Benjamín Araoz', dueDate: 'Día 4 (Reino)', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-19', title: 'Sub 2: Armar grupos y coordinar reuniones previas', desc: 'Organizar grupos y reuniones con subjefes (Ceballos, Zayún, etc.).', area: 'SUB2', assignee: 'Mil. Mateo Andres', dueDate: 'Pre-Campamento', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-20', title: 'Sub 2: ODD interna y proyecto de escuadras', desc: 'Definir nombres y presentar proyecto de escuadras Sub 2.', area: 'SUB2', assignee: 'Mil. Mateo Andres & Subjefes Sub 2', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-21', title: 'Sub 2: Construcción del Reino / Capilla en taller', desc: 'Día 4: Construir Capilla administrando tiempos y recursos.', area: 'SUB2', assignee: 'Mil. Mateo Andres', dueDate: 'Día 4 (Reino)', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-22', title: 'Sub 3: Armar grupos y coordinar reuniones previas', desc: 'Organizar grupos y reuniones con subjefes (de la Cuesta, Arroyo, etc.).', area: 'SUB3', assignee: 'Mil. Samuel Sariago', dueDate: 'Pre-Campamento', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-23', title: 'Sub 3: ODD interna y proyecto de escuadras', desc: 'Definir nombres y presentar proyecto de escuadras Sub 3.', area: 'SUB3', assignee: 'Mil. Samuel Sariago & Subjefes Sub 3', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-24', title: 'Sub 3: Construcción del Reino / Capilla en taller', desc: 'Día 4: Construir Capilla administrando tiempos y recursos.', area: 'SUB3', assignee: 'Mil. Samuel Sariago', dueDate: 'Día 4 (Reino)', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-25', title: 'Sub 4: Armar grupos y coordinar reuniones previas', desc: 'Organizar grupos y reuniones con subjefes (Lopez, Viejobueno, etc.).', area: 'SUB4', assignee: 'Mil. Dardo Maldonado', dueDate: 'Pre-Campamento', priority: 'ALTA', status: 'IN_PROGRESS' },
+            { id: 'TM-26', title: 'Sub 4: ODD interna y proyecto de escuadras', desc: 'Definir nombres y presentar proyecto de escuadras Sub 4.', area: 'SUB4', assignee: 'Mil. Dardo Maldonado & Subjefes Sub 4', dueDate: 'Diciembre', priority: 'ALTA', status: 'TODO' },
+            { id: 'TM-27', title: 'Sub 4: Construcción del Reino / Capilla en taller', desc: 'Día 4: Construir Capilla administrando tiempos y recursos.', area: 'SUB4', assignee: 'Mil. Dardo Maldonado', dueDate: 'Día 4 (Reino)', priority: 'ALTA', status: 'TODO' }
+        ];
+        window.INITIAL_TASKS = INITIAL_TASKS;
+        window.tasks = [];
+
+        let currentAreaFilter = 'ALL';
+        let currentMainView = 'kanban';
+        let draggedTaskId = null;
+        let activeUser = {name: 'Sin sesión', email: '', area: 'JEFATURA', canSeeAll: false};
+
+        function applyUserPermissions(user) {
+            activeUser = user;
+            document.getElementById('userAvatarSidebar').textContent = getInitials(user.name);
+            document.getElementById('userNameSidebar').textContent = user.name;
+            document.getElementById('topBarUserEmail').textContent = `${user.name.replace('Mil. ', '')} (${user.email})`;
+
+            const restrictedBanner = document.getElementById('restrictedNoticeSidebar');
+            const allAreaBtns = document.querySelectorAll('.area-btn');
+
+            if (user.canSeeAll) {
+                document.getElementById('userRoleSidebar').textContent = 'Acceso Total (Jefe / Secretario)';
+                document.getElementById('userRoleSidebar').className = 'text-[10px] text-brand-green font-medium truncate';
+                restrictedBanner.classList.add('hidden');
+                allAreaBtns.forEach(btn => btn.classList.remove('hidden'));
+                document.getElementById('sidebarGroupSubs').classList.remove('hidden');
+                document.getElementById('sidebarGroupDeptos').classList.remove('hidden');
+                filterByArea('ALL');
+            } else {
+                document.getElementById('userRoleSidebar').textContent = `Vista exclusiva: ${AREAS_CONFIG[user.area].name}`;
+                document.getElementById('userRoleSidebar').className = 'text-[10px] text-brand-gold font-medium truncate';
+                restrictedBanner.classList.remove('hidden');
+
+                allAreaBtns.forEach(btn => {
+                    const btnArea = btn.dataset.area;
+                    if (btnArea === user.area || btnArea === 'JEFATURA') {
+                        btn.classList.remove('hidden');
+                    } else {
+                        btn.classList.add('hidden');
+                    }
+                });
+
+                const isSub = user.area.startsWith('SUB');
+                document.getElementById('sidebarGroupSubs').classList.toggle('hidden', !isSub);
+                document.getElementById('sidebarGroupDeptos').classList.toggle('hidden', isSub);
+                filterByArea(user.area);
+            }
+            closeLoginModal();
+        }
+
+        function openLoginModal() {
+            if (window.authenticatedMember) { window.logoutWorkspace(); return; }
+            renderQuickLoginList();
+            document.getElementById('loginErrorMsg').classList.add('hidden');
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('loginOverlay').classList.add('flex');
+        }
+
+        function closeLoginModal() {
+            if (!window.authenticatedMember) return;
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('loginOverlay').classList.remove('flex');
+        }
+
+        function loginWithEmailInput() {
+            const rawEmail = document.getElementById('loginEmailInput').value.trim().toLowerCase();
+            if (!rawEmail) return;
+            loginByEmail(rawEmail);
+        }
+
+        function loginByEmail(email) {
+            // Old view simulation controls now always require a real Google session.
+            window.signInWithGoogleReal();
+        }
+        window.acceptAuthenticatedUser = function(user) { applyUserPermissions(user); };
+        window.loginByEmail = loginByEmail;
+
+        function renderQuickLoginList() {}
+
+        function renderDirectoryCards() {
+            const jefaturaUsers = USER_DIRECTORY.filter(u => u.area === 'JEFATURA');
+            document.getElementById('directoryJefaturaGrid').innerHTML = jefaturaUsers.map(u => `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-11 h-11 rounded-full bg-brand-red/10 text-brand-red flex items-center justify-center font-bold text-base shrink-0">${getInitials(u.name)}</div>
+                        <div class="min-w-0">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-red block">${u.roleTitle}</span>
+                            <h4 class="font-bold text-brand-dark text-sm truncate font-brand">${u.name}</h4>
+                            <span class="text-xs text-slate-500 block">Fortín: ${u.fortin}</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded">Permiso: Total</span>
+                        
+                    </div>
+                </div>
+            `).join('');
+
+            const subAreas = [
+                { key: 'SUB1', headerBg: 'bg-brand-cyan', btnBg: 'bg-brand-cyan hover:bg-brand-cyan/90' },
+                { key: 'SUB2', headerBg: 'bg-brand-green', btnBg: 'bg-brand-green hover:bg-brand-green/90' },
+                { key: 'SUB3', headerBg: 'bg-brand-orange', btnBg: 'bg-brand-orange hover:bg-brand-orange/90' },
+                { key: 'SUB4', headerBg: 'bg-brand-red', btnBg: 'bg-brand-red hover:bg-brand-red/90' }
+            ];
+
+            document.getElementById('directorySubsGrid').innerHTML = subAreas.map(sub => {
+                const members = USER_DIRECTORY.filter(u => u.area === sub.key);
+                const boss = members[0];
+                const deputies = members.slice(1);
+                return `
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="${sub.headerBg} text-white p-4 flex justify-between items-start">
+                            <div class="min-w-0">
+                                <span class="text-[11px] uppercase tracking-wider opacity-90 font-semibold">${AREAS_CONFIG[sub.key].name}</span>
+                                <h4 class="font-bold text-base truncate font-brand">${boss.name}</h4>
+                                <span class="text-[11px] font-mono opacity-90 block truncate">${boss.email}</span>
+                            </div>
+                            
+                        </div>
+                        <div class="p-4 flex-1 space-y-2 text-xs">
+                            <div class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Subjefes (${deputies.length})</div>
+                            ${deputies.map(d => `
+                                <div class="py-1.5 border-b border-slate-100 last:border-none flex items-center justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-brand-dark truncate">${d.name} <span class="text-slate-400">(${d.fortin})</span></div>
+                                        <div class="text-[11px] font-mono text-slate-500 truncate">${d.email}</div>
+                                    </div>
+                                    
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const deptoKeys = ['FORDOC', 'ACTIVIDADES', 'ADMIN', 'COMUNICACIONES', 'LOGISTICA'];
+            document.getElementById('directoryDeptosGrid').innerHTML = deptoKeys.map(dKey => {
+                const members = USER_DIRECTORY.filter(u => u.area === dKey);
+                const boss = members[0];
+                const deputies = members.slice(1);
+                return `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase px-2.5 py-1 rounded-md border ${AREAS_CONFIG[dKey].badgeClass}">${AREAS_CONFIG[dKey].name}</span>
+                            <div class="mt-3">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold">Jefe</span>
+                                <p class="font-bold text-brand-dark text-sm font-brand">${boss.name}</p>
+                                <p class="text-[11px] font-mono text-brand-green truncate">${boss.email}</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function copyAllEmails() {
+            const realEmails = [
+                'dardomaldonado7@gmail.com', 'jcfernandez2611@gmail.com', 'zayunbautista@gmail.com',
+                'Ceballoslauty2@gmail.com', 'Almadaaugusto39@gmail.com', 'bluccalemos@gmail.com',
+                'joseignaciohaller@gmail.com', 'Javi.mignone5@gmail.com', 'joaquinmeyercba@gmail.com',
+                'matiasezequielopez@gmail.com', 'tobiasarroyo90@gmail.com', 'nahundelacuesta@gmail.com',
+                'herediarobertonicolas@gmail.com', 'santiandrada01@gmail.com', 'santinopaga07@gmail.com',
+                'samusariago@gmail.com', 'andres678922@gmail.com', 'facundofinetti@gmail.com',
+                'salinaseduardo.mkt@gmail.com', 'ngkuck@gmail.com', 'Lucasarias458@gmail.com',
+                'Julianahumada86@gmail.com', 'Mateeeandres@gmail.com', 'santiagoviejobueno6@gmail.com'
+            ].join(', ');
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = realEmails;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const btnText = document.getElementById('copyEmailsBtnText');
+            btnText.textContent = '¡24 Mails Copiados!';
+            setTimeout(() => { btnText.textContent = 'Copiar los 24 Mails para Drive'; }, 2500);
+        }
+
+        function renderKanban() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const columns = {
+                TODO: document.getElementById('col-TODO'),
+                IN_PROGRESS: document.getElementById('col-IN_PROGRESS'),
+                REVIEW: document.getElementById('col-REVIEW'),
+                DONE: document.getElementById('col-DONE')
+            };
+
+            const counts = { TODO: 0, IN_PROGRESS: 0, REVIEW: 0, DONE: 0 };
+            Object.values(columns).forEach(col => col.innerHTML = '');
+
+            const filteredTasks = window.tasks.filter(t => {
+                const allowedByRole = activeUser.canSeeAll || t.area === activeUser.area || t.area === 'JEFATURA';
+                const matchesArea = currentAreaFilter === 'ALL' || t.area === currentAreaFilter;
+                const matchesSearch = !searchQuery || 
+                    t.title.toLowerCase().includes(searchQuery) || 
+                    t.desc.toLowerCase().includes(searchQuery) || 
+                    t.assignee.toLowerCase().includes(searchQuery) ||
+                    t.dueDate.toLowerCase().includes(searchQuery);
+                return allowedByRole && matchesArea && matchesSearch;
+            });
+
+            filteredTasks.forEach(task => {
+                counts[task.status] = (counts[task.status] || 0) + 1;
+                const card = createTaskCardElement(task);
+                if (columns[task.status]) columns[task.status].appendChild(card);
+            });
+
+            Object.keys(columns).forEach(statusKey => {
+                if (counts[statusKey] === 0) {
+                    columns[statusKey].innerHTML = `
+                        <div class="h-32 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs p-4 text-center">
+                            <i class="ph ph-tray text-xl mb-1"></i>
+                            <span>Arrastra una tarea aquí</span>
+                        </div>
+                    `;
+                }
+                document.getElementById(`count-${statusKey}`).textContent = counts[statusKey];
+            });
+
+            updateSidebarBadges();
+        }
+        window.renderKanban = renderKanban;
+
+        function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+        function createTaskCardElement(task) {
+            task = {...task, title: escapeHtml(task.title), desc: escapeHtml(task.desc), assignee: escapeHtml(task.assignee), dueDate: escapeHtml(task.dueDate)};
+            const div = document.createElement('div');
+            div.id = `card-${task.id}`;
+            div.draggable = true;
+            div.ondragstart = (e) => dragStart(e, task.id);
+            div.ondragend = (e) => dragEnd(e);
+            
+            const areaInfo = AREAS_CONFIG[task.area] || AREAS_CONFIG.JEFATURA;
+            const priorityStyles = {
+                ALTA: 'text-brand-red bg-red-50 border-red-200',
+                MEDIA: 'text-amber-700 bg-amber-50 border-amber-200',
+                BAJA: 'text-slate-600 bg-slate-100 border-slate-200'
+            };
+            const isDone = task.status === 'DONE';
+
+            div.className = `bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md hover:border-brand-cyan transition cursor-grab active:cursor-grabbing group relative ${isDone ? 'opacity-75' : ''}`;
+            
+            div.innerHTML = `
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-[10px] font-bold font-mono text-slate-400">${task.id}</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${areaInfo.badgeClass}">${areaInfo.name}</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded border ${priorityStyles[task.priority] || priorityStyles.MEDIA}">${task.priority}</span>
+                        <button onclick="openTaskModal('${task.id}')" title="Editar" class="p-1 text-slate-400 hover:text-brand-dark hover:bg-slate-100 rounded">
+                            <i class="ph ph-pencil-simple text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <h4 onclick="openTaskModal('${task.id}')" class="font-bold text-sm text-brand-dark leading-snug mb-1.5 cursor-pointer hover:text-brand-red font-brand ${isDone ? 'line-through text-slate-500' : ''}">${task.title}</h4>
+                <p class="text-xs text-slate-600 line-clamp-2 mb-3 leading-relaxed">${task.desc}</p>
+
+                <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 text-xs">
+                    <div class="flex items-center space-x-1.5 text-slate-700 font-medium bg-brand-light px-2 py-1 rounded-md">
+                        <i class="ph-fill ph-calendar-blank text-brand-cyan"></i>
+                        <span class="text-[11px]">${task.dueDate}</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        ${task.status !== 'TODO' ? `<button onclick="moveTaskStep('${task.id}', -1)" class="p-1 hover:bg-slate-100 rounded text-slate-500"><i class="ph-bold ph-caret-left text-xs"></i></button>` : ''}
+                        ${task.status !== 'DONE' ? `<button onclick="moveTaskStep('${task.id}', 1)" class="p-1 hover:bg-slate-100 rounded text-slate-500"><i class="ph-bold ph-caret-right text-xs"></i></button>` : ''}
+                    </div>
+                </div>
+
+                <div class="mt-2.5 flex items-center space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-brand-dark text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                        ${getInitials(task.assignee)}
+                    </div>
+                    <span class="text-[11px] text-slate-700 font-medium truncate">${task.assignee}</span>
+                </div>
+            `;
+            return div;
+        }
+
+        function getInitials(name) {
+            const clean = name.replace('Mil.', '').replace('Pbto.', '').replace('Sem.', '').trim();
+            const parts = clean.split(' ');
+            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+            return clean.slice(0, 2).toUpperCase();
+        }
+
+        function updateSidebarBadges() {
+            document.getElementById('badge-ALL').textContent = window.tasks.length;
+            Object.keys(AREAS_CONFIG).forEach(areaKey => {
+                if (areaKey === 'ALL') return;
+                const count = window.tasks.filter(t => t.area === areaKey).length;
+                const badgeEl = document.getElementById(`badge-${areaKey}`);
+                if (badgeEl) badgeEl.textContent = count;
+            });
+        }
+
+        function dragStart(ev, taskId) {
+            draggedTaskId = taskId;
+            ev.dataTransfer.setData('text/plain', taskId);
+            setTimeout(() => {
+                const el = document.getElementById(`card-${taskId}`);
+                if (el) el.classList.add('dragging');
+            }, 0);
+        }
+
+        function dragEnd(ev) {
+            const el = document.getElementById(`card-${draggedTaskId}`);
+            if (el) el.classList.remove('dragging');
+            draggedTaskId = null;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function dragLeave(ev) {
+            ev.currentTarget.classList.remove('drag-over');
+        }
+
+        async function drop(ev, newStatus) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const taskId = ev.dataTransfer.getData('text/plain') || draggedTaskId;
+            if (!taskId) return;
+
+            const taskIndex = window.tasks.findIndex(t => t.id === taskId);
+            if (taskIndex > -1) {
+                await window.saveTaskToCloud({...window.tasks[taskIndex], status: newStatus});
+                renderKanban();
+            }
+        }
+
+        const STATUS_ORDER = ['TODO', 'IN_PROGRESS', 'REVIEW', 'DONE'];
+        async function moveTaskStep(taskId, direction) {
+            const task = window.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            const currentIndex = STATUS_ORDER.indexOf(task.status);
+            const nextIndex = currentIndex + direction;
+            if (nextIndex >= 0 && nextIndex < STATUS_ORDER.length) {
+                await window.saveTaskToCloud({...task, status: STATUS_ORDER[nextIndex]});
+                renderKanban();
+            }
+        }
+
+        function filterByArea(areaKey) {
+            if (!activeUser.canSeeAll && areaKey !== activeUser.area && areaKey !== 'JEFATURA') {
+                areaKey = activeUser.area;
+            }
+            currentAreaFilter = areaKey;
+            if (currentMainView !== 'kanban') switchMainView('kanban');
+
+            document.querySelectorAll('.area-btn').forEach(btn => {
+                const isHidden = btn.classList.contains('hidden');
+                if (btn.dataset.area === areaKey) {
+                    btn.className = `area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 text-white transition mt-1 ${isHidden ? 'hidden' : ''}`;
+                } else {
+                    btn.className = `area-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/60 hover:text-white transition mt-1 ${isHidden ? 'hidden' : ''}`;
+                }
+            });
+
+            const info = AREAS_CONFIG[areaKey];
+            const badge = document.getElementById('currentAreaBadge');
+            badge.textContent = info.name;
+            badge.className = `text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${info.badgeClass}`;
+            document.getElementById('mainHeaderTitle').textContent = info.title;
+            document.getElementById('currentLeaderText').textContent = info.leader;
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            renderKanban();
+        }
+
+        function switchMainView(viewName) {
+            currentMainView = viewName;
+            const views = ['kanban', 'directory', 'timeline', 'hosting'];
+            
+            views.forEach(v => {
+                const viewEl = document.getElementById(`view-${v}`);
+                const navBtn = document.getElementById(`nav-view-${v}`);
+                if (v === viewName) {
+                    viewEl.classList.remove('hidden');
+                    navBtn.className = 'w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium bg-brand-red text-white shadow-sm transition';
+                } else {
+                    viewEl.classList.add('hidden');
+                    navBtn.className = 'w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition';
+                }
+            });
+
+            const quickBar = document.getElementById('quickMilestonesBar');
+            if (viewName === 'kanban') {
+                quickBar.classList.remove('hidden');
+                document.getElementById('mainHeaderTitle').textContent = AREAS_CONFIG[currentAreaFilter].title;
+            } else if (viewName === 'directory') {
+                quickBar.classList.add('hidden');
+                document.getElementById('mainHeaderTitle').textContent = 'Estructura de Mando y Mails del Chat';
+            } else if (viewName === 'timeline') {
+                quickBar.classList.add('hidden');
+                document.getElementById('mainHeaderTitle').textContent = 'Cronograma e Hitos del Campamento';
+            } else if (viewName === 'hosting') {
+                quickBar.classList.add('hidden');
+                document.getElementById('mainHeaderTitle').textContent = 'Hosting Gratuito & Google Auth';
+            }
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+        }
+
+        function openTaskModal(taskId = null) {
+            const modal = document.getElementById('taskModal');
+            const deleteBtn = document.getElementById('deleteTaskBtn');
+            
+            if (taskId) {
+                const t = window.tasks.find(item => item.id === taskId);
+                if (!t) return;
+                document.getElementById('modalTitle').textContent = `Editar Tarea ${t.id}`;
+                document.getElementById('taskId').value = t.id;
+                document.getElementById('taskTitle').value = t.title;
+                document.getElementById('taskDesc').value = t.desc;
+                document.getElementById('taskArea').value = t.area;
+                document.getElementById('taskAssignee').value = t.assignee;
+                document.getElementById('taskDueDate').value = t.dueDate;
+                document.getElementById('taskPriority').value = t.priority;
+                document.getElementById('taskStatus').value = t.status;
+                deleteBtn.classList.remove('hidden');
+            } else {
+                document.getElementById('modalTitle').textContent = 'Nueva Tarea del Proyecto';
+                document.getElementById('taskId').value = '';
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDesc').value = '';
+                const defaultArea = currentAreaFilter === 'ALL' ? (activeUser.canSeeAll ? 'JEFATURA' : activeUser.area) : currentAreaFilter;
+                document.getElementById('taskArea').value = defaultArea;
+                document.getElementById('taskAssignee').value = AREAS_CONFIG[defaultArea].defaultAssignee;
+                document.getElementById('taskDueDate').value = '19 al 23 de Octubre';
+                document.getElementById('taskPriority').value = 'MEDIA';
+                document.getElementById('taskStatus').value = 'TODO';
+                deleteBtn.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.add('hidden');
+            document.getElementById('taskModal').classList.remove('flex');
+        }
+
+        function autoFillAssignee() {
+            const selectedArea = document.getElementById('taskArea').value;
+            if (AREAS_CONFIG[selectedArea]) {
+                document.getElementById('taskAssignee').value = AREAS_CONFIG[selectedArea].defaultAssignee;
+            }
+        }
+
+        async function saveTask(e) {
+            e.preventDefault();
+            const existingId = document.getElementById('taskId').value;
+            const taskData = {
+                title: document.getElementById('taskTitle').value.trim(),
+                desc: document.getElementById('taskDesc').value.trim(),
+                area: document.getElementById('taskArea').value,
+                assignee: document.getElementById('taskAssignee').value.trim(),
+                dueDate: document.getElementById('taskDueDate').value.trim(),
+                priority: document.getElementById('taskPriority').value,
+                status: document.getElementById('taskStatus').value
+            };
+
+            if (existingId) {
+                const idx = window.tasks.findIndex(t => t.id === existingId);
+                if (idx > -1) {
+                    await window.saveTaskToCloud({...window.tasks[idx], ...taskData});
+                }
+            } else {
+                const newId = `TM-${crypto.randomUUID()}`;
+                const created = { id: newId, ...taskData };
+                await window.saveTaskToCloud(created);
+            }
+            closeTaskModal();
+            renderKanban();
+        }
+
+        async function deleteCurrentTask() {
+            const id = document.getElementById('taskId').value;
+            await window.deleteTaskFromCloud(id);
+            closeTaskModal();
+            renderKanban();
+        }
+
+        function resetDefaultData() { alert('La restauración automática está deshabilitada para proteger las tareas compartidas.'); }
+
+        window.onload = function() {
+            document.getElementById('openSidebarBtn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+            });
+            document.getElementById('closeSidebarBtn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            });
+            renderDirectoryCards();
+            renderQuickLoginList();
+            renderKanban();
+        };
+    </script>
+</body>
+</html>
